@@ -15,6 +15,19 @@ jobs:
       - name: Unzip Android project
         run: unzip -o FrostSensi_AndroidProject.zip
 
+      - name: Enable Kotlin support
+        run: |
+          sed -i "s/id 'com.android.application' version '8.4.1' apply false/id 'com.android.application' version '8.4.1' apply false\n    id 'org.jetbrains.kotlin.android' version '1.9.24' apply false/" FrostSensi/build.gradle
+          sed -i "s/id 'com.android.application'/id 'com.android.application'\n    id 'org.jetbrains.kotlin.android'/" FrostSensi/app/build.gradle
+          cat >> FrostSensi/app/build.gradle << 'EOF'
+
+          android {
+              kotlinOptions {
+                  jvmTarget = '17'
+              }
+          }
+          EOF
+
       - name: Fix dependency conflicts
         run: |
           sed -i "/androidx.webkit:webkit/d" FrostSensi/app/build.gradle
